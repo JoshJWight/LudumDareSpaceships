@@ -91,4 +91,20 @@ public class GameMath {
 		RealPoint v = new RealPoint(c.x-b.x, c.y-b.y);
 		return getAngle(u, v);
 	}
+	
+	/**
+	 * Find the angle between two orientations, 0<x<2pi
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	public static double orientationDiff(double o1, double o2) {
+		while(o1<o2) {
+			o2 = o2 - (Math.PI*2);
+		}
+		while((o1-o2)>=Math.PI*2) {
+			o1 = o1 - (Math.PI*2);
+		}
+		return o1-o2;
+	}
 }

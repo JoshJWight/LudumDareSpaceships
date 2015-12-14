@@ -1,26 +1,45 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GamePanel extends Component implements KeyListener{
-	public boolean running;
+	public boolean gameOver = false;
 	private GameModel model;
 	private Point offset;
 	
-	public GamePanel(int width, int height) {
-		this.setSize(width, height);
+	private Image image;
+	
+	public GamePanel() {
 		model = new GameModel();
 		//addKeyListener(this);
 	}
 	
-	public void update(Graphics g) {
+	public void reset() {
+		gameOver=false;
+		model.reset();
+	}
+	
+	public int getScore() {
+		return model.score;
+	}
+	
+	public void update() {
+		image = createImage(getParent().getWidth(), getParent().getHeight());
+    	if(image==null){
+    		return;
+    	}
+    	Graphics g = image.getGraphics();
+		
+		
 		model.tick();
 		Point modelCenter = model.getCenterPoint();
-		offset = new Point((this.getWidth()/2 - modelCenter.x), (this.getHeight()/2 - modelCenter.y));
+		offset = new Point((this.getParent().getWidth()/2 - modelCenter.x), (this.getParent().getHeight()/2 - modelCenter.y));
 		for(Ship s: model.getShips()) {
 			g.setColor(s.color);
 			g.fillPolygon(makePolygon(s.hullCorners));
@@ -37,15 +56,39 @@ public class GamePanel extends Component implements KeyListener{
 		g.setColor(Color.CYAN);
 		for(Laser l: model.getLasers()){
 			Point p = normalize(l.position);
-			g.fillOval(p.x, p.y, 10, 10);
+			g.fillOval(p.x-5, p.y-5, 10, 10);
+		}
+		
+		g.setColor(Color.ORANGE);
+		for(Spark s: model.sparks){
+			Point p = normalize(s.position);
+			g.fillOval(p.x-1, p.y-1, 2, 2);
 		}
 		
 		g.setColor(Color.WHITE);
 		for(Fleet f: model.getFleets()) {
 			Point p = normalize(f.center);
-			g.fillOval(p.x, p.y, 5, 5);
+			g.fillOval(p.x-3, p.y-3, 6, 6);
 		}
 		
+		g.setFont(g.getFont().deriveFont(Font.PLAIN, 25));
+		g.drawString("SCORE: "+model.score, 10, 30);
+		
+		if(model.gameOver) {
+			g.setColor(Color.RED);
+			g.setFont(g.getFont().deriveFont(Font.BOLD, 100));
+			g.drawString("GAME OVER", this.getParent().getWidth()/2 - 300, this.getParent().getHeight()/2 - 25);
+		}
+		
+		
+		
+		//draw all things before this point
+		
+		getGraphics().drawImage(image, 0, 0, this); 
+		
+		if(model.gameOverCountdown<=0) {
+			gameOver=true;
+		}
 	}
 	
 	private Polygon makePolygon(RealPoint points[]) {

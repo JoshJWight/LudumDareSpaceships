@@ -14,6 +14,8 @@ public class Fleet {
 	
 	private double orientation;//arbitrary, used to maintain ship positions
 	
+	public EnemyAI ai;
+	
 	public Fleet() {
 		ships = new ArrayList<Ship>();
 		velocity = new RealPoint(0, 0);
@@ -68,6 +70,19 @@ public class Fleet {
 		}
 		angularAcceleration *= ANGULAR_SPEED_FACTOR / ships.size();
 		angularSpeed += angularAcceleration;
+	}
+	
+	public double getEnabledThrusterOrientation() {
+		RealPoint acceleration = new RealPoint(0, 0);
+		for(Ship s: ships) {
+			if(!s.pThrusterDisabled) {
+				acceleration.add(GameMath.polarToCartesian(1, s.orientation));
+			}
+			if(!s.sThrusterDisabled) {
+				acceleration.add(GameMath.polarToCartesian(1, s.orientation));
+			}
+		}
+		return GameMath.cartesianToPolar(acceleration.x, acceleration.y).y;
 	}
 	
 	private double getTorque(RealPoint pos, double ori) {

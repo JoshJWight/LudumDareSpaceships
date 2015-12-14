@@ -7,6 +7,7 @@ public class Laser {
 	public double orientation;
 	public RealPoint position;
 	public int age;
+	public boolean isHero;
 	
 	public Laser(RealPoint position, double orientation) {
 		this.position = position;
