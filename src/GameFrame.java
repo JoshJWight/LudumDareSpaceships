@@ -45,7 +45,7 @@ public class GameFrame extends JFrame implements KeyListener {
 	private JLabel highScores;
 	private JLabel playAgainMessage;
 	
-	private JButton fuckThisStupidShit;
+	private JButton placeholder;
 	
 	private Font titleFont;
 	private Font textFont;
@@ -82,13 +82,13 @@ public class GameFrame extends JFrame implements KeyListener {
         splashPanel.addKeyListener(this);
         this.add(splashPanel, BorderLayout.CENTER);
         
-        //this is a dirty hack to get key input. fuck swing.
-        fuckThisStupidShit = new JButton();
-        fuckThisStupidShit.setVisible(false);
-        fuckThisStupidShit.setSize(0, 0);
-        this.add(fuckThisStupidShit, BorderLayout.NORTH);
-        fuckThisStupidShit.addKeyListener(this);
-        fuckThisStupidShit.setFocusable(true);
+        //this is a dirty hack to get key input. swing made things difficult for me.
+        placeholder = new JButton();
+        placeholder.setVisible(false);
+        placeholder.setSize(0, 0);
+        this.add(placeholder, BorderLayout.NORTH);
+        placeholder.addKeyListener(this);
+        placeholder.setFocusable(true);
         
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setVisible(true);
@@ -143,7 +143,7 @@ public class GameFrame extends JFrame implements KeyListener {
     	this.remove(playAgainPanel);
         this.add(gamePanel, BorderLayout.CENTER);
         
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(fuckThisStupidShit);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent(placeholder);
         gameActive=true;
         repaint();
         gamePanel.update(getGraphics());
